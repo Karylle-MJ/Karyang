@@ -1,1 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Keyboard Typing Game</title>
+</head>
+<body>
+<h1>Keyboard Typing Game</h1>
+<h2>Type Words</h2>
 
+<!-- Section for adding words -->
+<div id="addSection">
+  <input id="wordInput" placeholder="Enter word">
+  <button id="addBtn">Add</button>
+  <div id="wordList"></div>
+  <button id="startBtn" style="display:none">Start Game</button>
+</div>
+
+<!-- Game section (hidden until "Start" is clicked) -->
+<div id="gameSection" style="display:none">
+  <div id="checkboxes"></div>
+  <input id="verifyInput" placeholder="Type a word">
+  <button id="verifyBtn">Enter</button>
+  <button id="clear">Clear</button>
+  <p id="progress"></p>
+  <div id="feedback"></div>
+</div>
+
+<br>
+
+<script>
+// Array to store all added words
+let words = [];
+// Set to store words that have been correctly checked
+let checked = new Set();
+
+// Add word to the list
+addBtn.onclick = () => {
+  let w = wordInput.value.trim().toLowerCase();
+
+// Add only if it's not empty and not already in the list
+  if (w && !words.includes(w)) {
+    words.push(w); // Store in array
+    wordList.innerHTML = words.join('<br>'); // Display all words
+    startBtn.style.display = 'inline'; // Show "Start" button
+  }
+  wordInput.value = ''; // Clear input after adding
+};
+
+// Start the game
+startBtn.onclick = () => {
+  addSection.style.display = 'none'; // Hide add section
+  gameSection.style.display = 'block'; // Show game section
+  // Create checkboxes for each word
+  checkboxes.innerHTML = words.map((w,i) =>
+    `<input type=checkbox id=c${i} disabled> <label id=l${i}>${w}</label><br>`
+  ).join('');
+};
+
+// Verify typed word
+verifyBtn.onclick = () => {
+  let w = verifyInput.value.trim().toLowerCase();
+  let i = words.indexOf(w); // Find word in array
+  if (i >= 0 && !checked.has(w)) { // If found and not already checked
+    checked.add(w); // Mark as checked
+    document.getElementById('c'+i).checked = true; // Tick checkbox
+    let lbl = document.getElementById('l'+i);
+    lbl.style.textDecoration = 'line-through'; // Strike through text
+    feedback.textContent = ''; // Clear feedback
+  } else {
+    feedback.textContent = 'Wrong or already checked!'; // Error message
+  }
+};
+
+// Clear button function (empties input and feedback)
+clear.onclick = () => {
+  verifyInput.value = '';
+  feedback.textContent = '';
+};
+
+</script>
+</body>
+</html>
